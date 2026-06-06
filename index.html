@@ -725,15 +725,78 @@
     .delete-bar p { font-family: var(--font-head); font-size: 12px; color: var(--red-alert); letter-spacing: 1px; flex: 1; }
     .btn-delete { background: var(--red-alert); color: white; border: none; font-family: var(--font-head); font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 6px 10px; cursor: pointer; border-radius: 2px; text-transform: uppercase; }
 
+    /* ===== SUMMARY STYLES ===== */
+    .summary-tabs { display: flex; gap: 0; margin-bottom: 14px; border: 1px solid var(--paper-dark); border-radius: 4px; overflow: hidden; }
+    .sum-tab {
+      flex: 1; padding: 9px 4px; font-family: var(--font-head); font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; text-transform: uppercase; background: white; color: var(--ash);
+      border: none; cursor: pointer; transition: all 0.15s; border-right: 1px solid var(--paper-dark);
+    }
+    .sum-tab:last-child { border-right: none; }
+    .sum-tab.active { background: var(--navy); color: var(--gold); }
+
+    .sum-period-selector { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+    .sum-period-selector select {
+      flex: 1; font-family: var(--font-head); font-size: 13px; font-weight: 600;
+      color: var(--navy); background: white; border: 1px solid var(--paper-dark);
+      border-radius: 4px; padding: 8px 10px; letter-spacing: 1px;
+    }
+    .btn-generate {
+      background: var(--navy); color: var(--gold); border: 1px solid var(--gold-dim);
+      font-family: var(--font-head); font-size: 12px; font-weight: 700; letter-spacing: 1px;
+      text-transform: uppercase; padding: 9px 12px; cursor: pointer; border-radius: 3px;
+      white-space: nowrap;
+    }
+    .btn-generate:active { background: var(--navy-light); }
+
+    .compiled-report {
+      background: white; border: 2px solid var(--navy); border-radius: 4px;
+      padding: 18px; font-family: var(--font-body); font-size: 13px; line-height: 1.8; color: var(--ink);
+    }
+    .compiled-report h2 {
+      font-family: var(--font-head); font-size: 17px; font-weight: 700; letter-spacing: 3px;
+      text-align: center; text-transform: uppercase; color: var(--navy);
+      border-bottom: 2px solid var(--navy); padding-bottom: 6px; margin-bottom: 4px;
+    }
+    .compiled-report .cr-subtitle {
+      text-align: center; font-family: var(--font-head); font-size: 12px;
+      letter-spacing: 2px; color: var(--ash); margin-bottom: 14px;
+    }
+    .cr-stats { display: grid; grid-template-columns: repeat(2,1fr); gap: 8px; margin-bottom: 14px; }
+    .cr-stat {
+      border: 1px solid var(--paper-dark); border-radius: 4px; padding: 8px 10px; text-align: center;
+    }
+    .cr-stat .cv { font-family: var(--font-head); font-size: 22px; font-weight: 700; color: var(--navy); line-height: 1; }
+    .cr-stat .cl { font-family: var(--font-head); font-size: 10px; letter-spacing: 1px; color: var(--ash); text-transform: uppercase; margin-top: 2px; }
+    .cr-stat.red .cv { color: var(--red-alert); }
+    .cr-stat.green .cv { color: var(--green-ok); }
+
+    .cr-section-title {
+      font-family: var(--font-head); font-size: 11px; font-weight: 700; letter-spacing: 2px;
+      color: var(--ash); text-transform: uppercase; padding: 5px 0 6px;
+      border-bottom: 1px solid var(--paper-dark); margin: 12px 0 8px;
+    }
+    .cr-day-row {
+      display: flex; align-items: flex-start; gap: 8px; padding: 6px 0;
+      border-bottom: 1px solid var(--paper-dark); font-size: 12px;
+    }
+    .cr-day-row:last-child { border-bottom: none; }
+    .cr-day-num { font-family: var(--font-head); font-size: 14px; font-weight: 700; color: var(--navy); min-width: 24px; }
+    .cr-day-info { flex: 1; }
+    .cr-day-meta { font-family: var(--font-head); font-size: 11px; color: var(--ash); letter-spacing: 1px; margin-top: 1px; }
+    .cr-footer { margin-top: 14px; padding-top: 10px; border-top: 1px solid var(--paper-dark); font-family: var(--font-head); font-size: 11px; color: var(--ash); letter-spacing: 1px; text-align: center; }
+
     /* ===== PRINT STYLES ===== */
     @media print {
       body { background: white !important; }
       .header, .bottom-nav, .wa-bar, .install-banner,
-      .form-actions, .send-actions, .save-flash { display: none !important; }
+      .form-actions, .send-actions, .save-flash,
+      .summary-tabs, .sum-period-selector { display: none !important; }
       .main { padding: 0 !important; overflow: visible; }
-      .report-preview { border: none !important; padding: 8px !important; font-size: 12px !important; }
-      .report-preview h2 { font-size: 16px !important; }
+      .report-preview, .compiled-report { border: none !important; padding: 8px !important; font-size: 12px !important; }
+      .report-preview h2, .compiled-report h2 { font-size: 16px !important; }
       .rp-sigs { page-break-inside: avoid; }
+      .cr-day-row { page-break-inside: avoid; }
       * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     }
   </style>
@@ -778,6 +841,9 @@
     </button>
     <button class="nav-btn" id="nav-overview" onclick="showView('overview')">
       <i class="ti ti-chart-bar"></i>Overview
+    </button>
+    <button class="nav-btn" id="nav-summary" onclick="showView('summary')">
+      <i class="ti ti-file-analytics"></i>Summary
     </button>
   </nav>
 
@@ -829,10 +895,10 @@ window.addEventListener('DOMContentLoaded', () => {
 // ===== NAVIGATION =====
 function showView(v) {
   state.view = v;
-  ['calendar','fill','reports','overview'].forEach(x => {
-    document.getElementById('nav-'+x).classList.toggle('active', x===v);
+  ['calendar','fill','reports','overview','summary'].forEach(x => {
+    const el = document.getElementById('nav-'+x);
+    if (el) el.classList.toggle('active', x===v);
   });
-  // Show/hide WA bar only on non-print views
   render();
 }
 
@@ -842,6 +908,7 @@ function render() {
   else if (state.view === 'fill') el.innerHTML = renderFillForm();
   else if (state.view === 'reports') el.innerHTML = renderReportsList();
   else if (state.view === 'overview') el.innerHTML = renderOverview();
+  else if (state.view === 'summary') el.innerHTML = renderSummary();
 
   if (state.view === 'fill') {
     // Small delay to allow DOM paint
@@ -1457,6 +1524,227 @@ function sendWhatsApp(key) {
   const waNum = (document.getElementById('wa-number')?.value || localStorage.getItem('sdr_wa_number')||'').replace(/\D/g,'');
   const url = waNum ? `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
   window.open(url, '_blank');
+}
+
+// ===== SUMMARY (Weekly / Monthly compiled reports) =====
+function renderSummary() {
+  const summaryType = state.summaryType || 'monthly';
+  const now2 = new Date();
+
+  // Build week options (last 8 weeks)
+  let weekOptions = '';
+  for (let w = 0; w < 8; w++) {
+    const start = new Date(now2);
+    start.setDate(now2.getDate() - now2.getDay() - w*7);
+    const end = new Date(start); end.setDate(start.getDate()+6);
+    const label = `${start.toLocaleDateString('en-GB',{day:'2-digit',month:'short'})} – ${end.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'})}`;
+    const val = `${start.getFullYear()}-${String(start.getMonth()+1).padStart(2,'0')}-${String(start.getDate()).padStart(2,'0')}`;
+    weekOptions += `<option value="${val}" ${w===0?'selected':''}>${label}</option>`;
+  }
+
+  // Build month options (last 12 months)
+  let monthOptions = '';
+  for (let m = 0; m < 12; m++) {
+    const d = new Date(now2.getFullYear(), now2.getMonth()-m, 1);
+    const val = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+    const label = `${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+    monthOptions += `<option value="${val}" ${m===0?'selected':''}>${label}</option>`;
+  }
+
+  return `
+    <div class="summary-tabs">
+      <button class="sum-tab ${summaryType==='weekly'?'active':''}" onclick="setSummaryType('weekly')">
+        <i class="ti ti-calendar-week"></i> Weekly
+      </button>
+      <button class="sum-tab ${summaryType==='monthly'?'active':''}" onclick="setSummaryType('monthly')">
+        <i class="ti ti-calendar-month"></i> Monthly
+      </button>
+    </div>
+
+    ${summaryType==='weekly' ? `
+    <div class="sum-period-selector">
+      <select id="week-select">${weekOptions}</select>
+      <button class="btn-generate" onclick="generateSummary('weekly')"><i class="ti ti-file-analytics"></i> Generate</button>
+    </div>` : `
+    <div class="sum-period-selector">
+      <select id="month-select">${monthOptions}</select>
+      <button class="btn-generate" onclick="generateSummary('monthly')"><i class="ti ti-file-analytics"></i> Generate</button>
+    </div>`}
+
+    <div id="summary-output">
+      <div class="empty-state"><i class="ti ti-file-analytics"></i><p>Select a period and tap Generate</p></div>
+    </div>`;
+}
+
+function setSummaryType(type) {
+  state.summaryType = type;
+  render();
+}
+
+function generateSummary(type) {
+  const reports = state.reports;
+
+  if (type === 'weekly') {
+    const startStr = document.getElementById('week-select')?.value;
+    if (!startStr) return;
+    const start = new Date(startStr);
+    const end = new Date(start); end.setDate(start.getDate()+6);
+
+    // Collect reports in this week
+    const weekReports = [];
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate()+1)) {
+      const key = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+      if (reports[key]) weekReports.push({key, r: reports[key]});
+    }
+
+    const startLabel = start.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    const endLabel = end.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+    document.getElementById('summary-output').innerHTML = buildCompiledHTML(weekReports, `Weekly Report`, `${startLabel} — ${endLabel}`);
+
+  } else {
+    const monthVal = document.getElementById('month-select')?.value;
+    if (!monthVal) return;
+    const [yr, mo] = monthVal.split('-').map(Number);
+    const daysInMo = new Date(yr, mo, 0).getDate();
+
+    const monthReports = [];
+    for (let d = 1; d <= daysInMo; d++) {
+      const key = `${yr}-${String(mo).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+      if (reports[key]) monthReports.push({key, r: reports[key]});
+    }
+
+    document.getElementById('summary-output').innerHTML = buildCompiledHTML(monthReports, `Monthly Report`, `${MONTHS[mo-1]} ${yr}`);
+  }
+}
+
+function buildCompiledHTML(entries, title, subtitle) {
+  if (!entries.length) {
+    return `<div class="empty-state"><i class="ti ti-file-off"></i><p>No reports found for this period.</p></div>`;
+  }
+
+  const totalCars = entries.reduce((s,{r}) => s + parseInt(r.carsDay||0) + parseInt(r.carsNight||0), 0);
+  const totalPeople = entries.reduce((s,{r}) => s + parseInt(r.peopleDayNight||0), 0);
+  const totalWalkIns = entries.reduce((s,{r}) => s + parseInt(r.walkIns||0), 0);
+  const incidents = entries.filter(({r}) => r.noIncident === false);
+  const smoothDays = entries.filter(({r}) => r.operationSmooth !== false).length;
+
+  let html = `
+    <div class="compiled-report" id="compiled-report-print">
+      <h2>Lil Secret Resort</h2>
+      <div class="cr-subtitle">Security Desk — ${title}<br>${subtitle}</div>
+
+      <div class="cr-stats">
+        <div class="cr-stat"><div class="cv">${entries.length}</div><div class="cl">Days Covered</div></div>
+        <div class="cr-stat green"><div class="cv">${totalCars}</div><div class="cl">Total Vehicles</div></div>
+        <div class="cr-stat"><div class="cv">${totalPeople}</div><div class="cl">Total People</div></div>
+        <div class="cr-stat ${incidents.length>0?'red':'green'}"><div class="cv">${incidents.length}</div><div class="cl">Incidents</div></div>
+        <div class="cr-stat"><div class="cv">${totalWalkIns}</div><div class="cl">Walk-ins</div></div>
+        <div class="cr-stat green"><div class="cv">${smoothDays}</div><div class="cl">Smooth Days</div></div>
+      </div>
+
+      <div class="cr-section-title">Daily Breakdown</div>`;
+
+  entries.forEach(({key, r}) => {
+    const parts = key.split('-');
+    const dateDisp = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    const cars = parseInt(r.carsDay||0)+parseInt(r.carsNight||0);
+    const incTag = r.noIncident!==false ? `<span class="tag-clear">Clear</span>` : `<span class="tag-incident">Incident</span>`;
+    html += `<div class="cr-day-row">
+      <div class="cr-day-num">${parseInt(parts[2])}</div>
+      <div class="cr-day-info">
+        <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+          <span style="font-family:var(--font-head);font-size:12px;font-weight:600;color:var(--navy);">${dateDisp}</span>
+          ${incTag}
+        </div>
+        <div class="cr-day-meta">
+          Cars: ${cars} · People: ${r.peopleDayNight||0} · Walk-ins: ${r.walkIns||0}
+          ${r.gateOpenedBy ? '· Gate: '+esc(r.gateOpenedBy) : ''}
+          ${r.submittedBy ? '· By: '+esc(r.submittedBy) : ''}
+        </div>
+        ${r.noIncident===false && r.incidentDetails ? `<div style="color:var(--red-alert);font-size:11px;margin-top:2px;">⚠ ${esc(r.incidentDetails)}</div>` : ''}
+        ${!r.operationSmooth && r.operationNote ? `<div style="color:var(--gold-dim);font-size:11px;margin-top:2px;">⚡ ${esc(r.operationNote)}</div>` : ''}
+      </div>
+    </div>`;
+  });
+
+  if (incidents.length > 0) {
+    html += `<div class="cr-section-title">Incident Summary</div>`;
+    incidents.forEach(({key,r}) => {
+      const parts = key.split('-');
+      html += `<div class="cr-day-row">
+        <div class="cr-day-num" style="color:var(--red-alert);">!</div>
+        <div class="cr-day-info">
+          <div style="font-family:var(--font-head);font-size:12px;font-weight:600;color:var(--red-alert);">${parts[2]}/${parts[1]}/${parts[0]}</div>
+          <div>${esc(r.incidentDetails||'No details provided')}</div>
+        </div>
+      </div>`;
+    });
+  }
+
+  const generated = new Date().toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  html += `
+      <div class="cr-footer">
+        Generated: ${generated} · Lil Secret Resort Security Desk
+      </div>
+    </div>
+    <div class="send-actions" style="margin-top:10px;">
+      <button class="btn-print" onclick="printSummary()"><i class="ti ti-printer"></i> &nbsp;Print / PDF</button>
+      <button class="btn-whatsapp" onclick="shareSummaryWA(${JSON.stringify(entries.map(e=>e.key))}, '${esc(title)}', '${esc(subtitle)}')">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.553 4.122 1.522 5.857L.057 23.882l6.174-1.618A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.031-1.373l-.361-.214-3.741.981.998-3.648-.235-.374A9.862 9.862 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.419 0 9.894 4.474 9.894 9.894 0 5.419-4.475 9.894-9.894 9.894z"/></svg>
+        WhatsApp
+      </button>
+    </div>`;
+
+  return html;
+}
+
+function printSummary() { window.print(); }
+
+function shareSummaryWA(keys, title, subtitle) {
+  const reports = state.reports;
+  const entries = keys.map(k => ({key:k, r:reports[k]})).filter(e=>e.r);
+
+  const totalCars = entries.reduce((s,{r}) => s+parseInt(r.carsDay||0)+parseInt(r.carsNight||0), 0);
+  const totalPeople = entries.reduce((s,{r}) => s+parseInt(r.peopleDayNight||0), 0);
+  const totalWalkIns = entries.reduce((s,{r}) => s+parseInt(r.walkIns||0), 0);
+  const incidents = entries.filter(({r}) => r.noIncident===false);
+
+  let msg = `*LIL SECRET RESORT*\n`;
+  msg += `*Security Desk — ${title}*\n`;
+  msg += `${subtitle}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📊 *SUMMARY*\n`;
+  msg += `Days covered: ${entries.length}\n`;
+  msg += `🚗 Total vehicles: ${totalCars}\n`;
+  msg += `👥 Total people: ${totalPeople}\n`;
+  msg += `👣 Walk-ins: ${totalWalkIns}\n`;
+  msg += `🚨 Incidents: ${incidents.length}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📅 *DAILY LOG*\n`;
+
+  entries.forEach(({key,r}) => {
+    const parts = key.split('-');
+    const cars = parseInt(r.carsDay||0)+parseInt(r.carsNight||0);
+    msg += `\n*${parts[2]}/${parts[1]}/${parts[0]}*\n`;
+    msg += `Cars: ${cars} · People: ${r.peopleDayNight||0} · Walk-ins: ${r.walkIns||0}\n`;
+    msg += r.noIncident!==false ? `✅ No incident\n` : `🚨 INCIDENT: ${r.incidentDetails||'See report'}\n`;
+  });
+
+  if (incidents.length) {
+    msg += `\n━━━━━━━━━━━━━━━━━━━━\n`;
+    msg += `🚨 *INCIDENTS*\n`;
+    incidents.forEach(({key,r}) => {
+      const parts = key.split('-');
+      msg += `${parts[2]}/${parts[1]}/${parts[0]}: ${r.incidentDetails||'No details'}\n`;
+    });
+  }
+
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `Lil Secret Resort — Security Desk`;
+
+  const waNum = (document.getElementById('wa-number')?.value||localStorage.getItem('sdr_wa_number')||'').replace(/\D/g,'');
+  const url = waNum ? `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url,'_blank');
 }
 
 // ===== PWA INSTALL PROMPT =====
