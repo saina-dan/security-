@@ -1,0 +1,1495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0D1B2A">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Security Desk">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="description" content="Lil Secret Resort — Security Desk Report System">
+
+  <title>Security Desk Report</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="manifest.json">
+
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="icons/icon-192.png">
+
+  <!-- Tabler Icons (bundled inline via CDN with fallback) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"
+        onerror="this.onerror=null;">
+
+  <!-- Google Fonts (will cache offline after first load) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300&display=swap" rel="stylesheet"
+        onerror="this.onerror=null;">
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,600;1,8..60,300&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8C97A;
+      --gold-dim: #8B6E2A;
+      --navy: #0D1B2A;
+      --navy-mid: #162436;
+      --navy-light: #1E3250;
+      --steel: #2A3F55;
+      --ash: #8DA0B3;
+      --paper: #F5F0E8;
+      --paper-dark: #E8E0D0;
+      --ink: #1A1A2E;
+      --red-alert: #C0392B;
+      --green-ok: #27AE60;
+      --font-head: 'Rajdhani', 'Arial Narrow', sans-serif;
+      --font-body: 'Source Serif 4', Georgia, serif;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body { height: 100%; overflow: hidden; }
+
+    .app {
+      font-family: var(--font-body);
+      background: var(--paper);
+      height: 100dvh;
+      color: var(--ink);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* ===== HEADER ===== */
+    .header {
+      background: var(--navy);
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+      padding-top: var(--safe-top);
+    }
+    .header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent, transparent 60px, rgba(201,168,76,0.04) 60px, rgba(201,168,76,0.04) 61px);
+      pointer-events: none;
+    }
+    .header-inner {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px 10px;
+      border-bottom: 2px solid var(--gold);
+    }
+    .shield-icon {
+      width: 38px; height: 38px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .shield-icon i { color: var(--navy); font-size: 18px; }
+    .header-title { flex: 1; min-width: 0; }
+    .header-title h1 {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .header-title p {
+      font-family: var(--font-head);
+      font-size: 10px;
+      color: var(--ash);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+    .header-badge {
+      background: var(--gold);
+      color: var(--navy);
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 3px 8px;
+      border-radius: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    /* ===== BOTTOM NAV ===== */
+    .bottom-nav {
+      background: var(--navy-mid);
+      border-top: 2px solid var(--gold);
+      display: flex;
+      flex-shrink: 0;
+      padding-bottom: var(--safe-bottom);
+    }
+    .nav-btn {
+      flex: 1;
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ash);
+      background: none;
+      border: none;
+      padding: 10px 4px 8px;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 3px;
+      transition: color 0.2s;
+      border-top: 2px solid transparent;
+      margin-top: -2px;
+    }
+    .nav-btn i { font-size: 22px; }
+    .nav-btn:hover { color: var(--gold-light); }
+    .nav-btn.active { color: var(--gold); border-top-color: var(--gold); }
+
+    /* ===== MAIN CONTENT ===== */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px;
+      padding-bottom: 8px;
+    }
+    .main::-webkit-scrollbar { width: 3px; }
+    .main::-webkit-scrollbar-thumb { background: var(--ash); border-radius: 2px; }
+
+    /* WhatsApp number bar */
+    .wa-bar {
+      background: var(--navy-mid);
+      border-bottom: 1px solid rgba(201,168,76,0.2);
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .wa-bar label {
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      color: var(--ash);
+      text-transform: uppercase;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .wa-bar input {
+      flex: 1;
+      font-family: var(--font-body);
+      font-size: 13px;
+      color: white;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 3px;
+      padding: 5px 8px;
+      outline: none;
+    }
+    .wa-bar input:focus { border-color: var(--gold); }
+    .wa-bar input::placeholder { color: var(--ash); font-size: 12px; }
+
+    /* ===== CALENDAR ===== */
+    .month-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .month-header h2 {
+      font-family: var(--font-head);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--navy);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      flex: 1;
+    }
+    .month-nav { display: flex; align-items: center; gap: 6px; }
+    .month-nav button {
+      background: var(--navy);
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-family: var(--font-head);
+      font-size: 12px;
+      padding: 4px 10px;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: background 0.15s;
+    }
+    .month-nav button:active { background: var(--navy-light); }
+    .month-nav span {
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--navy);
+      min-width: 110px;
+      text-align: center;
+      letter-spacing: 1px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 14px;
+    }
+    .cal-day-name {
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-align: center;
+      color: var(--ash);
+      text-transform: uppercase;
+      padding: 3px 0;
+    }
+    .cal-day {
+      aspect-ratio: 1;
+      border: 1px solid var(--paper-dark);
+      border-radius: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: white;
+      min-height: 40px;
+    }
+    .cal-day:active { transform: scale(0.95); }
+    .cal-day.empty { background: transparent; border-color: transparent; cursor: default; }
+    .cal-day.today { border-color: var(--gold); border-width: 2px; }
+    .cal-day.filled { background: var(--navy); border-color: var(--navy-light); }
+    .cal-day.filled .day-num { color: var(--gold); }
+    .day-num {
+      font-family: var(--font-head);
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--navy);
+      line-height: 1;
+    }
+    .day-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--gold); margin-top: 2px; }
+    .day-dot.green { background: var(--green-ok); }
+
+    .cal-legend {
+      display: flex;
+      gap: 14px;
+      font-family: var(--font-head);
+      font-size: 11px;
+      color: var(--ash);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .cal-legend span { display: flex; align-items: center; gap: 5px; }
+    .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+    /* ===== FORMS ===== */
+    .form-card {
+      background: white;
+      border: 1px solid var(--paper-dark);
+      border-radius: 6px;
+      overflow: hidden;
+      margin-bottom: 12px;
+    }
+    .form-card-header {
+      background: var(--navy);
+      padding: 10px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .form-card-header h3 {
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--gold);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+    .form-card-header .day-badge {
+      margin-left: auto;
+      font-family: var(--font-head);
+      font-size: 11px;
+      color: var(--ash);
+      letter-spacing: 1px;
+    }
+    .form-card-body { padding: 12px 14px; }
+
+    .report-letterhead {
+      text-align: center;
+      padding: 12px;
+      border-bottom: 2px solid var(--navy);
+      margin-bottom: 12px;
+    }
+    .report-letterhead h2 {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      color: var(--navy);
+      text-transform: uppercase;
+    }
+    .report-letterhead p {
+      font-family: var(--font-head);
+      font-size: 11px;
+      color: var(--ash);
+      letter-spacing: 2px;
+      margin-top: 2px;
+    }
+
+    .section-divider {
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--ash);
+      text-transform: uppercase;
+      padding: 5px 0 7px;
+      border-bottom: 1px solid var(--paper-dark);
+      margin-bottom: 10px;
+    }
+
+    .field-group { margin-bottom: 10px; }
+    .field-label {
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: var(--ash);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .field-label .required { color: var(--red-alert); }
+
+    input[type=text], input[type=time], input[type=number], select, textarea {
+      width: 100%;
+      font-family: var(--font-body);
+      font-size: 15px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--paper-dark);
+      border-radius: 4px;
+      padding: 9px 10px;
+      outline: none;
+      transition: border-color 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+    }
+    input[type=text]:focus, input[type=time]:focus, input[type=number]:focus, select:focus, textarea:focus {
+      border-color: var(--gold);
+      background: white;
+    }
+    textarea { resize: vertical; min-height: 68px; line-height: 1.6; }
+    input[type=number] { -moz-appearance: textfield; }
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+
+    .checkbox-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      padding: 8px 10px;
+      border: 1px solid var(--paper-dark);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s;
+      background: var(--paper);
+    }
+    .check-item:active { opacity: 0.8; }
+    .check-item.checked { background: #F5F8F0; border-color: var(--green-ok); }
+    .check-item input[type=checkbox] { width: 16px; height: 16px; accent-color: var(--green-ok); flex-shrink: 0; margin-top: 1px; }
+    .check-item label { font-size: 12px; color: var(--ink); cursor: pointer; line-height: 1.4; }
+
+    .incident-toggle { display: flex; gap: 8px; }
+    .toggle-btn {
+      flex: 1;
+      padding: 9px 6px;
+      border: 1px solid var(--paper-dark);
+      border-radius: 4px;
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      background: var(--paper);
+      color: var(--ash);
+    }
+    .toggle-btn.no.active { background: #F0FAF4; border-color: var(--green-ok); color: var(--green-ok); }
+    .toggle-btn.yes.active { background: #FDF0F0; border-color: var(--red-alert); color: var(--red-alert); }
+
+    /* Signatures */
+    .sig-section { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 4px; }
+    .sig-box { border: 1px solid var(--paper-dark); border-radius: 4px; overflow: hidden; background: white; }
+    .sig-box-header {
+      background: var(--steel);
+      padding: 6px 10px;
+      font-family: var(--font-head);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      color: var(--gold-light);
+      text-transform: uppercase;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .sig-box-header button {
+      font-family: var(--font-head);
+      font-size: 9px;
+      color: var(--ash);
+      background: none;
+      border: 1px solid var(--ash);
+      padding: 2px 6px;
+      cursor: pointer;
+      border-radius: 2px;
+      letter-spacing: 1px;
+    }
+    .sig-canvas-wrap { padding: 6px; }
+    canvas.sig-canvas {
+      display: block;
+      width: 100%;
+      height: 70px;
+      border: 1px dashed var(--paper-dark);
+      border-radius: 2px;
+      cursor: crosshair;
+      touch-action: none;
+      background: white;
+    }
+    .sig-name-field { padding: 0 6px 6px; }
+    .sig-name-field input { font-size: 12px; }
+
+    /* Form Actions */
+    .form-actions {
+      display: flex;
+      gap: 8px;
+      padding: 12px 14px;
+      background: var(--paper);
+      border-top: 1px solid var(--paper-dark);
+    }
+    .btn-primary {
+      flex: 1;
+      background: var(--navy);
+      color: var(--gold);
+      border: 1px solid var(--gold-dim);
+      font-family: var(--font-head);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 11px 14px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+    }
+    .btn-primary:active { background: var(--navy-light); transform: scale(0.98); }
+    .btn-secondary {
+      background: white;
+      color: var(--navy);
+      border: 1px solid var(--paper-dark);
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 11px 12px;
+      cursor: pointer;
+      border-radius: 3px;
+      transition: all 0.15s;
+      white-space: nowrap;
+    }
+    .btn-secondary:active { border-color: var(--navy); transform: scale(0.98); }
+
+    .save-flash {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-head);
+      font-size: 12px;
+      color: var(--green-ok);
+      letter-spacing: 1px;
+      font-weight: 600;
+      padding: 8px 14px;
+      background: #F0FAF4;
+      border-top: 1px solid #B8E6C8;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .save-flash.show { opacity: 1; }
+
+    /* Report Viewer */
+    .report-preview {
+      background: white;
+      border: 2px solid var(--navy);
+      border-radius: 4px;
+      padding: 18px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      line-height: 1.8;
+      color: var(--ink);
+    }
+    .report-preview h2 {
+      font-family: var(--font-head);
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--navy);
+      border-bottom: 2px solid var(--navy);
+      padding-bottom: 6px;
+      margin-bottom: 4px;
+    }
+    .rp-date {
+      text-align: center;
+      font-family: var(--font-head);
+      font-size: 13px;
+      letter-spacing: 2px;
+      color: var(--ash);
+      margin-bottom: 14px;
+    }
+    .rp-line { display: flex; gap: 8px; margin-bottom: 6px; align-items: flex-start; }
+    .rp-tick { color: var(--green-ok); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+    .rp-sigs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--paper-dark);
+    }
+    .rp-sig-block p {
+      font-family: var(--font-head);
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      color: var(--ash);
+      text-transform: uppercase;
+      margin-bottom: 3px;
+    }
+    .rp-sig-block img { width: 100%; height: 50px; object-fit: contain; border-bottom: 1px solid var(--ink); display: block; }
+    .sig-name { font-family: var(--font-head); font-size: 12px; font-weight: 600; color: var(--ink); margin-top: 3px; letter-spacing: 1px; }
+    .rp-submitted { margin-top: 10px; font-family: var(--font-head); font-size: 12px; letter-spacing: 1px; color: var(--ash); font-style: italic; }
+
+    /* Send buttons */
+    .send-actions { display: flex; gap: 8px; margin-top: 10px; }
+    .btn-whatsapp {
+      flex: 1;
+      background: #25D366;
+      color: white;
+      border: none;
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 11px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-whatsapp:active { background: #1ebe5a; transform: scale(0.98); }
+    .btn-print {
+      flex: 1;
+      background: var(--steel);
+      color: white;
+      border: none;
+      font-family: var(--font-head);
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      padding: 11px 10px;
+      cursor: pointer;
+      border-radius: 3px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-print:active { background: var(--navy-light); transform: scale(0.98); }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 16px; }
+    .stat-card {
+      background: white;
+      border: 1px solid var(--paper-dark);
+      border-radius: 6px;
+      padding: 12px;
+      text-align: center;
+    }
+    .stat-card .stat-val { font-family: var(--font-head); font-size: 26px; font-weight: 700; color: var(--navy); line-height: 1; }
+    .stat-card .stat-label { font-family: var(--font-head); font-size: 10px; font-weight: 600; letter-spacing: 1.5px; color: var(--ash); text-transform: uppercase; margin-top: 3px; }
+    .stat-card.gold .stat-val { color: var(--gold-dim); }
+    .stat-card.green .stat-val { color: var(--green-ok); }
+    .stat-card.red .stat-val { color: var(--red-alert); }
+
+    /* Report list */
+    .report-list { display: flex; flex-direction: column; gap: 8px; }
+    .report-list-item {
+      background: white;
+      border: 1px solid var(--paper-dark);
+      border-radius: 4px;
+      padding: 11px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .report-list-item:active { border-color: var(--gold-dim); background: #faf8f2; }
+    .rli-day { font-family: var(--font-head); font-size: 20px; font-weight: 700; color: var(--navy); min-width: 30px; text-align: center; }
+    .rli-info { flex: 1; }
+    .rli-by { font-family: var(--font-head); font-size: 11px; color: var(--ash); letter-spacing: 1px; }
+    .rli-summary { font-size: 12px; color: var(--ink); margin-top: 2px; }
+
+    /* Tags */
+    .tag-incident { background: #FDF0F0; color: var(--red-alert); padding: 2px 7px; border-radius: 3px; font-size: 11px; font-family: var(--font-head); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+    .tag-clear { background: #F0FAF4; color: var(--green-ok); padding: 2px 7px; border-radius: 3px; font-size: 11px; font-family: var(--font-head); font-weight: 600; letter-spacing: 1px; text-transform: uppercase; }
+
+    /* Empty state */
+    .empty-state { text-align: center; padding: 36px 16px; color: var(--ash); }
+    .empty-state i { font-size: 38px; display: block; margin-bottom: 10px; }
+    .empty-state p { font-family: var(--font-head); font-size: 13px; letter-spacing: 1px; }
+
+    /* Install banner */
+    .install-banner {
+      background: var(--navy-light);
+      border-bottom: 1px solid var(--gold-dim);
+      padding: 8px 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .install-banner p { font-family: var(--font-head); font-size: 12px; color: var(--ash); letter-spacing: 1px; flex: 1; }
+    .install-banner button {
+      background: var(--gold);
+      color: var(--navy);
+      border: none;
+      font-family: var(--font-head);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 5px 10px;
+      cursor: pointer;
+      border-radius: 2px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .install-banner .dismiss { background: none; color: var(--ash); padding: 4px 6px; }
+
+    /* Delete confirm */
+    .delete-bar {
+      background: #FDF0F0;
+      border: 1px solid var(--red-alert);
+      border-radius: 4px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+    .delete-bar p { font-family: var(--font-head); font-size: 12px; color: var(--red-alert); letter-spacing: 1px; flex: 1; }
+    .btn-delete { background: var(--red-alert); color: white; border: none; font-family: var(--font-head); font-size: 11px; font-weight: 700; letter-spacing: 1px; padding: 6px 10px; cursor: pointer; border-radius: 2px; text-transform: uppercase; }
+
+    /* ===== PRINT STYLES ===== */
+    @media print {
+      body { background: white !important; }
+      .header, .bottom-nav, .wa-bar, .install-banner,
+      .form-actions, .send-actions, .save-flash { display: none !important; }
+      .main { padding: 0 !important; overflow: visible; }
+      .report-preview { border: none !important; padding: 8px !important; font-size: 12px !important; }
+      .report-preview h2 { font-size: 16px !important; }
+      .rp-sigs { page-break-inside: avoid; }
+      * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+  <!-- Install Banner (shown when PWA can be installed) -->
+  <div class="install-banner" id="install-banner" style="display:none;">
+    <p>📲 Install this app for offline use</p>
+    <button id="install-btn">Install</button>
+    <button class="dismiss" id="install-dismiss">✕</button>
+  </div>
+
+  <div class="header">
+    <div class="header-inner">
+      <div class="shield-icon"><i class="ti ti-shield-check"></i></div>
+      <div class="header-title">
+        <h1>Security Desk</h1>
+        <p>Lil Secret Resort · Duty Log</p>
+      </div>
+      <div class="header-badge" id="current-date-badge">—</div>
+    </div>
+    <div class="wa-bar" id="wa-bar-wrap">
+      <label>📱 WA No.</label>
+      <input type="tel" id="wa-number" placeholder="254712345678 (no +)" inputmode="numeric">
+    </div>
+  </div>
+
+  <div class="main" id="main-content"></div>
+
+  <nav class="bottom-nav">
+    <button class="nav-btn active" id="nav-calendar" onclick="showView('calendar')">
+      <i class="ti ti-calendar-month"></i>Calendar
+    </button>
+    <button class="nav-btn" id="nav-fill" onclick="showView('fill')">
+      <i class="ti ti-pencil"></i>Fill
+    </button>
+    <button class="nav-btn" id="nav-reports" onclick="showView('reports')">
+      <i class="ti ti-file-text"></i>Reports
+    </button>
+    <button class="nav-btn" id="nav-overview" onclick="showView('overview')">
+      <i class="ti ti-chart-bar"></i>Overview
+    </button>
+  </nav>
+
+</div>
+
+<script>
+'use strict';
+
+// ===== STATE =====
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+const now = new Date();
+
+let state = {
+  view: 'calendar',
+  selectedDay: null,
+  selectedMonth: now.getMonth(),
+  selectedYear: now.getFullYear(),
+  currentEditKey: null,
+  editingReport: null,
+  reports: {},
+  sigCanvas: { officer1: null, officer2: null },
+  sigCtx: { officer1: null, officer2: null },
+  sigData: { officer1: null, officer2: null }
+};
+
+// ===== STORAGE =====
+function getReports() {
+  try { const s = localStorage.getItem('sdr_reports_v2'); return s ? JSON.parse(s) : {}; }
+  catch(e) { return {}; }
+}
+function saveReports(data) {
+  try { localStorage.setItem('sdr_reports_v2', JSON.stringify(data)); } catch(e) {}
+}
+
+// ===== INIT =====
+state.reports = getReports();
+
+document.getElementById('current-date-badge').textContent =
+  now.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' }).toUpperCase();
+
+// Restore WA number
+window.addEventListener('DOMContentLoaded', () => {
+  const wa = document.getElementById('wa-number');
+  if (wa) wa.value = localStorage.getItem('sdr_wa_number') || '';
+  wa.addEventListener('input', () => localStorage.setItem('sdr_wa_number', wa.value));
+});
+
+// ===== NAVIGATION =====
+function showView(v) {
+  state.view = v;
+  ['calendar','fill','reports','overview'].forEach(x => {
+    document.getElementById('nav-'+x).classList.toggle('active', x===v);
+  });
+  // Show/hide WA bar only on non-print views
+  render();
+}
+
+function render() {
+  const el = document.getElementById('main-content');
+  if (state.view === 'calendar') el.innerHTML = renderCalendar();
+  else if (state.view === 'fill') el.innerHTML = renderFillForm();
+  else if (state.view === 'reports') el.innerHTML = renderReportsList();
+  else if (state.view === 'overview') el.innerHTML = renderOverview();
+
+  if (state.view === 'fill') {
+    // Small delay to allow DOM paint
+    requestAnimationFrame(() => initSignatureCanvases());
+  }
+  // Scroll to top
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+// ===== HELPERS =====
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function getDaysInMonth(m, y) { return new Date(y, m+1, 0).getDate(); }
+function firstDayOfMonth(m, y) { return new Date(y, m, 1).getDay(); }
+function todayKey() {
+  return `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-${String(now.getDate()).padStart(2,'0')}`;
+}
+function fmtTime(t) {
+  if (!t) return '';
+  const [h,m] = t.split(':');
+  const hr = parseInt(h);
+  const ampm = hr >= 12 ? 'Pm' : 'Am';
+  return `${hr%12||12}.${m}${ampm}`;
+}
+function fmtTimeWA(t) {
+  if (!t) return '';
+  const [h,m] = t.split(':');
+  const hr = parseInt(h);
+  const ampm = hr >= 12 ? 'PM' : 'AM';
+  return `${hr%12||12}:${m} ${ampm}`;
+}
+
+// ===== CALENDAR =====
+function renderCalendar() {
+  const days = getDaysInMonth(state.selectedMonth, state.selectedYear);
+  const firstDay = firstDayOfMonth(state.selectedMonth, state.selectedYear);
+  const tKey = todayKey();
+
+  let html = `
+    <div class="month-header">
+      <div class="month-nav">
+        <button onclick="prevMonth()"><i class="ti ti-chevron-left"></i></button>
+        <span>${MONTHS[state.selectedMonth]} ${state.selectedYear}</span>
+        <button onclick="nextMonth()"><i class="ti ti-chevron-right"></i></button>
+      </div>
+    </div>
+    <div class="calendar-grid">`;
+
+  DAYS.forEach(d => html += `<div class="cal-day-name">${d}</div>`);
+  for (let i=0; i<firstDay; i++) html += `<div class="cal-day empty"></div>`;
+
+  for (let d=1; d<=days; d++) {
+    const key = `${state.selectedYear}-${String(state.selectedMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const has = !!state.reports[key];
+    const isToday = key === tKey;
+    let cls = 'cal-day';
+    if (has) cls += ' filled';
+    else if (isToday) cls += ' today';
+    html += `<div class="${cls}" onclick="selectDay(${d},'${key}')">
+      <span class="day-num">${d}</span>
+      ${has ? '<div class="day-dot green"></div>' : (isToday ? '<div class="day-dot"></div>' : '')}
+    </div>`;
+  }
+
+  html += `</div>
+  <div class="cal-legend">
+    <span><span class="legend-dot" style="background:var(--green-ok);"></span> Submitted</span>
+    <span><span class="legend-dot" style="background:var(--gold);"></span> Today</span>
+  </div>`;
+  return html;
+}
+
+function prevMonth() {
+  state.selectedMonth--;
+  if (state.selectedMonth < 0) { state.selectedMonth = 11; state.selectedYear--; }
+  render();
+}
+function nextMonth() {
+  state.selectedMonth++;
+  if (state.selectedMonth > 11) { state.selectedMonth = 0; state.selectedYear++; }
+  render();
+}
+function selectDay(d, key) {
+  state.selectedDay = d;
+  state.currentEditKey = key;
+  state.sigData = { officer1: null, officer2: null };
+  if (state.reports[key]) {
+    state.sigData.officer1 = state.reports[key].sig1 || null;
+    state.sigData.officer2 = state.reports[key].sig2 || null;
+  }
+  showView('fill');
+}
+
+// ===== FORM =====
+function getDefaultForm(key) {
+  const parts = key.split('-');
+  return {
+    date: key, dateDisplay: `${parts[2]}/${parts[1]}/${parts[0]}`,
+    gateOpenedTime: '06:00', gateOpenedBy: '',
+    dayShiftOfficer: '', dayShiftTime: '07:45',
+    staffPresent: true, allDutiesDone: true,
+    operationSmooth: true, operationNote: '',
+    carsDay: '', carsNight: '', peopleDayNight: '', walkIns: '',
+    noIncident: true, incidentDetails: '',
+    nightShiftOfficer: '', nightShiftTime: '19:00',
+    carsOnDeparture: '', additionalNotes: '', submittedBy: '',
+    sig1: null, sig2: null, sig1Name: '', sig2Name: '', savedAt: null
+  };
+}
+
+function renderFillForm() {
+  if (!state.currentEditKey) {
+    state.currentEditKey = todayKey();
+    state.selectedDay = now.getDate();
+  }
+  const key = state.currentEditKey;
+  const form = state.reports[key] || getDefaultForm(key);
+  const parts = key.split('-');
+  const dateDisp = `${parts[2]}/${parts[1]}/${parts[0]}`;
+  const noInc = form.noIncident !== false;
+  const opSmooth = form.operationSmooth !== false;
+  const existing = !!state.reports[key];
+
+  return `
+  <div class="form-card">
+    <div class="form-card-header">
+      <i class="ti ti-shield-check" style="color:var(--gold);font-size:15px;"></i>
+      <h3>Daily Report</h3>
+      <span class="day-badge">${dateDisp}</span>
+    </div>
+    <div class="form-card-body">
+      <div class="report-letterhead">
+        <h2>Security Desk Report</h2>
+        <p>${dateDisp}</p>
+      </div>
+
+      <div class="section-divider"><i class="ti ti-sunrise"></i> &nbsp;Gate &amp; Shift Handover</div>
+      <div class="row-2" style="margin-bottom:10px;">
+        <div class="field-group">
+          <div class="field-label">Gate opened at <span class="required">*</span></div>
+          <input type="time" id="f-gateTime" value="${esc(form.gateOpenedTime||'06:00')}">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Gate opened by <span class="required">*</span></div>
+          <input type="text" id="f-gateBy" value="${esc(form.gateOpenedBy||'')}" placeholder="Officer name" autocomplete="name">
+        </div>
+      </div>
+      <div class="row-2" style="margin-bottom:10px;">
+        <div class="field-group">
+          <div class="field-label">Day shift officer <span class="required">*</span></div>
+          <input type="text" id="f-dayOfficer" value="${esc(form.dayShiftOfficer||'')}" placeholder="Officer name" autocomplete="name">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Handover time</div>
+          <input type="time" id="f-dayTime" value="${esc(form.dayShiftTime||'07:45')}">
+        </div>
+      </div>
+
+      <div class="section-divider"><i class="ti ti-clipboard-check"></i> &nbsp;Duty Status</div>
+      <div class="checkbox-grid" style="margin-bottom:10px;">
+        <div class="check-item ${form.staffPresent!==false?'checked':''}" onclick="toggleCheck(this,'f-staffPresent')">
+          <input type="checkbox" id="f-staffPresent" ${form.staffPresent!==false?'checked':''}>
+          <label>All staff present &amp; on shift</label>
+        </div>
+        <div class="check-item ${form.allDutiesDone!==false?'checked':''}" onclick="toggleCheck(this,'f-allDutiesDone')">
+          <input type="checkbox" id="f-allDutiesDone" ${form.allDutiesDone!==false?'checked':''}>
+          <label>All duties carried out</label>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-bottom:8px;">
+        <div class="field-label">Operation status</div>
+        <div class="incident-toggle">
+          <div class="toggle-btn no ${opSmooth?'active':''}" onclick="setToggle('operation',true)">✓ Smooth</div>
+          <div class="toggle-btn yes ${!opSmooth?'active':''}" onclick="setToggle('operation',false)">⚠ Issues</div>
+        </div>
+      </div>
+      <div class="field-group" id="opNoteWrap" style="${opSmooth?'display:none':''}">
+        <div class="field-label">Describe issue</div>
+        <textarea id="f-opNote" placeholder="What happened...">${esc(form.operationNote||'')}</textarea>
+      </div>
+
+      <div class="section-divider"><i class="ti ti-car"></i> &nbsp;Vehicle &amp; Visitor Log</div>
+      <div class="row-3" style="margin-bottom:10px;">
+        <div class="field-group">
+          <div class="field-label">Cars (day)</div>
+          <input type="number" id="f-carsDay" value="${esc(String(form.carsDay||''))}" placeholder="0" min="0" inputmode="numeric">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Cars (night)</div>
+          <input type="number" id="f-carsNight" value="${esc(String(form.carsNight||''))}" placeholder="0" min="0" inputmode="numeric">
+        </div>
+        <div class="field-group">
+          <div class="field-label">People</div>
+          <input type="number" id="f-people" value="${esc(String(form.peopleDayNight||''))}" placeholder="0" min="0" inputmode="numeric">
+        </div>
+      </div>
+      <div class="row-2" style="margin-bottom:10px;">
+        <div class="field-group">
+          <div class="field-label">Walk-ins</div>
+          <input type="number" id="f-walkIns" value="${esc(String(form.walkIns||''))}" placeholder="0" min="0" inputmode="numeric">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Cars on departure</div>
+          <input type="number" id="f-carsDepart" value="${esc(String(form.carsOnDeparture||''))}" placeholder="0" min="0" inputmode="numeric">
+        </div>
+      </div>
+
+      <div class="section-divider"><i class="ti ti-alert-triangle"></i> &nbsp;Incident Report</div>
+      <div class="field-group" style="margin-bottom:8px;">
+        <div class="field-label">Incident status</div>
+        <div class="incident-toggle">
+          <div class="toggle-btn no ${noInc?'active':''}" onclick="setToggle('incident',true)">✓ No Incident</div>
+          <div class="toggle-btn yes ${!noInc?'active':''}" onclick="setToggle('incident',false)">⚠ Incident</div>
+        </div>
+      </div>
+      <div class="field-group" id="incidentWrap" style="${noInc?'display:none':''}">
+        <div class="field-label">Incident details <span class="required">*</span></div>
+        <textarea id="f-incident" placeholder="Describe the incident...">${esc(form.incidentDetails||'')}</textarea>
+      </div>
+
+      <div class="section-divider"><i class="ti ti-moon"></i> &nbsp;Night Shift Handover</div>
+      <div class="row-2" style="margin-bottom:10px;">
+        <div class="field-group">
+          <div class="field-label">Night shift officer <span class="required">*</span></div>
+          <input type="text" id="f-nightOfficer" value="${esc(form.nightShiftOfficer||'')}" placeholder="Officer name" autocomplete="name">
+        </div>
+        <div class="field-group">
+          <div class="field-label">Handover time</div>
+          <input type="time" id="f-nightTime" value="${esc(form.nightShiftTime||'19:00')}">
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-bottom:10px;">
+        <div class="field-label">Additional notes</div>
+        <textarea id="f-notes" placeholder="Any other observations...">${esc(form.additionalNotes||'')}</textarea>
+      </div>
+      <div class="field-group" style="margin-bottom:14px;">
+        <div class="field-label">Submitted by <span class="required">*</span></div>
+        <input type="text" id="f-submittedBy" value="${esc(form.submittedBy||'')}" placeholder="Full name of officer submitting" autocomplete="name">
+      </div>
+
+      <div class="section-divider"><i class="ti ti-pen"></i> &nbsp;Officer Signatures</div>
+      <div class="sig-section">
+        <div class="sig-box">
+          <div class="sig-box-header">
+            <span>Officer 1 – Day</span>
+            <button onclick="clearSig('officer1')">Clear</button>
+          </div>
+          <div class="sig-canvas-wrap">
+            <canvas class="sig-canvas" id="sig-officer1" width="260" height="70"></canvas>
+          </div>
+          <div class="sig-name-field">
+            <input type="text" id="sig1-name" placeholder="Print name" value="${esc(form.sig1Name||'')}" autocomplete="name">
+          </div>
+        </div>
+        <div class="sig-box">
+          <div class="sig-box-header">
+            <span>Officer 2 – Night</span>
+            <button onclick="clearSig('officer2')">Clear</button>
+          </div>
+          <div class="sig-canvas-wrap">
+            <canvas class="sig-canvas" id="sig-officer2" width="260" height="70"></canvas>
+          </div>
+          <div class="sig-name-field">
+            <input type="text" id="sig2-name" placeholder="Print name" value="${esc(form.sig2Name||'')}" autocomplete="name">
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="save-flash" id="save-flash"><i class="ti ti-circle-check"></i> Report saved</div>
+    <div class="form-actions">
+      <button class="btn-secondary" onclick="showView('calendar')"><i class="ti ti-arrow-left"></i> Back</button>
+      <button class="btn-primary" onclick="saveReport()"><i class="ti ti-device-floppy"></i> &nbsp;Save Report</button>
+      ${existing ? `<button class="btn-secondary" onclick="viewSingleReport('${key}')"><i class="ti ti-eye"></i> View</button>` : ''}
+    </div>
+  </div>`;
+}
+
+function toggleCheck(el, id) {
+  const cb = document.getElementById(id);
+  if (cb) { cb.checked = !cb.checked; el.classList.toggle('checked', cb.checked); }
+}
+
+function setToggle(type, val) {
+  if (type === 'incident') {
+    document.querySelectorAll('.incident-toggle')[0]?.querySelectorAll('.toggle-btn').forEach((b,i) => {
+      b.classList.toggle('active', (i===0&&val)||(i===1&&!val));
+    });
+    const wrap = document.getElementById('incidentWrap');
+    if (wrap) wrap.style.display = val ? 'none' : '';
+  } else {
+    document.querySelectorAll('.incident-toggle')[1]?.querySelectorAll('.toggle-btn').forEach((b,i) => {
+      b.classList.toggle('active', (i===0&&val)||(i===1&&!val));
+    });
+    const wrap = document.getElementById('opNoteWrap');
+    if (wrap) wrap.style.display = val ? 'none' : '';
+  }
+}
+
+function initSignatureCanvases() {
+  ['officer1','officer2'].forEach(id => {
+    const canvas = document.getElementById('sig-'+id);
+    if (!canvas) return;
+    state.sigCanvas[id] = canvas;
+    const ctx = canvas.getContext('2d');
+    state.sigCtx[id] = ctx;
+    ctx.strokeStyle = '#0D1B2A';
+    ctx.lineWidth = 1.8;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    if (state.sigData[id]) {
+      const img = new Image();
+      img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      img.src = state.sigData[id];
+    }
+
+    let drawing = false, lastX = 0, lastY = 0;
+
+    function getPos(e) {
+      const r = canvas.getBoundingClientRect();
+      const scX = canvas.width / r.width;
+      const scY = canvas.height / r.height;
+      const client = e.touches ? e.touches[0] : e;
+      return [(client.clientX - r.left)*scX, (client.clientY - r.top)*scY];
+    }
+
+    canvas.addEventListener('mousedown', e => {
+      drawing = true; [lastX, lastY] = getPos(e);
+      ctx.beginPath(); ctx.arc(lastX, lastY, 0.9, 0, Math.PI*2);
+      ctx.fillStyle = '#0D1B2A'; ctx.fill();
+    });
+    canvas.addEventListener('mousemove', e => {
+      if (!drawing) return;
+      const [x, y] = getPos(e);
+      ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(x, y); ctx.stroke();
+      [lastX, lastY] = [x, y];
+    });
+    canvas.addEventListener('mouseup', () => { drawing=false; state.sigData[id]=canvas.toDataURL(); });
+    canvas.addEventListener('mouseleave', () => { drawing=false; });
+    canvas.addEventListener('touchstart', e => {
+      e.preventDefault(); drawing=true; [lastX,lastY]=getPos(e);
+    }, {passive:false});
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault(); if(!drawing) return;
+      const [x,y]=getPos(e);
+      ctx.beginPath(); ctx.moveTo(lastX,lastY); ctx.lineTo(x,y); ctx.stroke();
+      [lastX,lastY]=[x,y];
+    }, {passive:false});
+    canvas.addEventListener('touchend', () => { drawing=false; state.sigData[id]=canvas.toDataURL(); });
+  });
+}
+
+function clearSig(id) {
+  const c = state.sigCanvas[id];
+  if (c) state.sigCtx[id].clearRect(0, 0, c.width, c.height);
+  state.sigData[id] = null;
+}
+
+// ===== SAVE REPORT =====
+function saveReport() {
+  const key = state.currentEditKey;
+  if (!key) return;
+
+  const toggles = document.querySelectorAll('.incident-toggle');
+  const noIncident = toggles[0] ? toggles[0].querySelector('.no')?.classList.contains('active') : true;
+  const opSmooth = toggles[1] ? toggles[1].querySelector('.no')?.classList.contains('active') : true;
+
+  const sig1Canvas = state.sigCanvas['officer1'];
+  const sig2Canvas = state.sigCanvas['officer2'];
+  const sig1Data = state.sigData['officer1'] || (sig1Canvas ? sig1Canvas.toDataURL() : null);
+  const sig2Data = state.sigData['officer2'] || (sig2Canvas ? sig2Canvas.toDataURL() : null);
+
+  const report = {
+    date: key,
+    gateOpenedTime: document.getElementById('f-gateTime')?.value || '',
+    gateOpenedBy: document.getElementById('f-gateBy')?.value || '',
+    dayShiftOfficer: document.getElementById('f-dayOfficer')?.value || '',
+    dayShiftTime: document.getElementById('f-dayTime')?.value || '',
+    staffPresent: document.getElementById('f-staffPresent')?.checked ?? true,
+    allDutiesDone: document.getElementById('f-allDutiesDone')?.checked ?? true,
+    operationSmooth: opSmooth,
+    operationNote: document.getElementById('f-opNote')?.value || '',
+    carsDay: document.getElementById('f-carsDay')?.value || '0',
+    carsNight: document.getElementById('f-carsNight')?.value || '0',
+    peopleDayNight: document.getElementById('f-people')?.value || '0',
+    walkIns: document.getElementById('f-walkIns')?.value || '0',
+    noIncident: noIncident,
+    incidentDetails: document.getElementById('f-incident')?.value || '',
+    nightShiftOfficer: document.getElementById('f-nightOfficer')?.value || '',
+    nightShiftTime: document.getElementById('f-nightTime')?.value || '',
+    carsOnDeparture: document.getElementById('f-carsDepart')?.value || '0',
+    additionalNotes: document.getElementById('f-notes')?.value || '',
+    submittedBy: document.getElementById('f-submittedBy')?.value || '',
+    sig1: sig1Data, sig2: sig2Data,
+    sig1Name: document.getElementById('sig1-name')?.value || '',
+    sig2Name: document.getElementById('sig2-name')?.value || '',
+    savedAt: new Date().toISOString()
+  };
+
+  state.reports[key] = report;
+  saveReports(state.reports);
+
+  const flash = document.getElementById('save-flash');
+  if (flash) { flash.classList.add('show'); setTimeout(() => flash.classList.remove('show'), 2500); }
+
+  // Haptic feedback if supported
+  if (navigator.vibrate) navigator.vibrate(50);
+}
+
+// ===== REPORTS LIST =====
+function renderReportsList() {
+  const keys = Object.keys(state.reports).sort().reverse();
+  if (!keys.length) return `<div class="empty-state"><i class="ti ti-file-off"></i><p>No reports yet. Use the calendar to select a day and fill a report.</p></div>`;
+
+  let html = `<div class="report-list">`;
+  keys.forEach(key => {
+    const r = state.reports[key];
+    const parts = key.split('-');
+    const dateDisp = `${parts[2]}/${parts[1]}/${parts[0]}`;
+    const dayN = parseInt(parts[2]);
+    const incTag = r.noIncident !== false ? '<span class="tag-clear">Clear</span>' : '<span class="tag-incident">Incident</span>';
+    html += `<div class="report-list-item" onclick="viewSingleReport('${key}')">
+      <div class="rli-day">${dayN}</div>
+      <div class="rli-info">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:2px;">
+          <span style="font-family:var(--font-head);font-size:12px;font-weight:600;color:var(--navy);letter-spacing:1px;">${dateDisp}</span>
+          ${incTag}
+        </div>
+        <div class="rli-summary">${r.gateOpenedBy ? 'Gate: '+esc(r.gateOpenedBy) : ''} ${r.submittedBy ? '· '+esc(r.submittedBy) : ''}</div>
+        <div class="rli-by">Cars: ${parseInt(r.carsDay||0)+parseInt(r.carsNight||0)} · People: ${r.peopleDayNight||0} · Walk-ins: ${r.walkIns||0}</div>
+      </div>
+      <i class="ti ti-chevron-right" style="color:var(--ash);font-size:17px;"></i>
+    </div>`;
+  });
+  return html + `</div>`;
+}
+
+// ===== VIEW SINGLE REPORT =====
+function viewSingleReport(key) {
+  state.currentEditKey = key;
+  const r = state.reports[key];
+  if (!r) { showView('fill'); return; }
+
+  const parts = key.split('-');
+  const dateDisp = `${parts[2]}/${parts[1]}/${parts[0]}`;
+
+  const lines = [];
+  if (r.gateOpenedTime && r.gateOpenedBy)
+    lines.push(`The gate was opened at ${fmtTime(r.gateOpenedTime)} by ${r.gateOpenedBy}`);
+  if (r.dayShiftOfficer)
+    lines.push(`${r.dayShiftOfficer} took over for day shift duty at ${fmtTime(r.dayShiftTime)} after confirmation of everything in the premises including its occupants are secure and safe`);
+  if (r.staffPresent)
+    lines.push(`Every member of staff was present and reported duty as per shift`);
+  if (r.allDutiesDone)
+    lines.push(`All duties were done`);
+  if (!r.operationSmooth && r.operationNote)
+    lines.push(`Operation was not smooth: ${r.operationNote}`);
+  else if (r.operationSmooth)
+    lines.push(`Operation was smooth throughout the day`);
+  const cars = parseInt(r.carsDay||0) + parseInt(r.carsNight||0);
+  if (cars > 0 || r.walkIns)
+    lines.push(`Check in during the day were ${r.carsDay||0} car(s) and ${r.carsNight||0} at night all with ${r.peopleDayNight||0} people respectively. Walk-ins were ${r.walkIns||0}`);
+  lines.push(r.noIncident !== false ? `No incident occurred` : `Incident occurred: ${r.incidentDetails||'See details'}`);
+  if (r.nightShiftOfficer)
+    lines.push(`${r.nightShiftOfficer} took over for night shift duty at ${fmtTime(r.nightShiftTime)}`);
+  if (r.carsOnDeparture)
+    lines.push(`${r.carsOnDeparture} car(s) were in the premises upon departure. Left everything in order`);
+  if (r.additionalNotes)
+    lines.push(r.additionalNotes);
+
+  let html = `
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+      <button class="btn-secondary" onclick="showView('reports')"><i class="ti ti-arrow-left"></i> Back</button>
+      <button class="btn-secondary" onclick="editReport('${key}')"><i class="ti ti-pencil"></i> Edit</button>
+      <button class="btn-delete" onclick="confirmDeleteReport('${key}')"><i class="ti ti-trash"></i> Delete</button>
+    </div>
+    <div class="report-preview">
+      <h2>Security Desk Report</h2>
+      <div class="rp-date">${dateDisp}</div>`;
+
+  lines.forEach(l => html += `<div class="rp-line"><span class="rp-tick">✓-</span><span>${esc(l)}</span></div>`);
+
+  if (r.submittedBy) html += `<div class="rp-submitted">Submitted by: ${esc(r.submittedBy)}</div>`;
+
+  html += `<div class="rp-sigs">`;
+  html += `<div class="rp-sig-block"><p>Officer 1 — Day Shift</p>`;
+  if (r.sig1 && r.sig1 !== 'data:,') html += `<img src="${r.sig1}" alt="Sig 1">`;
+  else html += `<div style="height:44px;border-bottom:1px solid var(--ink);"></div>`;
+  html += `<div class="sig-name">${esc(r.sig1Name||r.gateOpenedBy||'')}</div></div>`;
+
+  html += `<div class="rp-sig-block"><p>Officer 2 — Night Shift</p>`;
+  if (r.sig2 && r.sig2 !== 'data:,') html += `<img src="${r.sig2}" alt="Sig 2">`;
+  else html += `<div style="height:44px;border-bottom:1px solid var(--ink);"></div>`;
+  html += `<div class="sig-name">${esc(r.sig2Name||r.nightShiftOfficer||'')}</div></div>`;
+
+  html += `</div></div>`;
+
+  html += `<div class="send-actions">
+    <button class="btn-print" onclick="printReport()"><i class="ti ti-printer"></i> &nbsp;Print / PDF</button>
+    <button class="btn-whatsapp" onclick="sendWhatsApp('${key}')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="white" style="flex-shrink:0;"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.125.553 4.122 1.522 5.857L.057 23.882l6.174-1.618A11.945 11.945 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.894a9.887 9.887 0 01-5.031-1.373l-.361-.214-3.741.981.998-3.648-.235-.374A9.862 9.862 0 012.106 12C2.106 6.58 6.58 2.106 12 2.106c5.419 0 9.894 4.474 9.894 9.894 0 5.419-4.475 9.894-9.894 9.894z"/></svg>
+      WhatsApp
+    </button>
+  </div>`;
+
+  document.getElementById('main-content').innerHTML = html;
+  document.getElementById('main-content').scrollTop = 0;
+}
+
+function editReport(key) {
+  state.currentEditKey = key;
+  const r = state.reports[key];
+  state.sigData = { officer1: r?.sig1||null, officer2: r?.sig2||null };
+  const parts = key.split('-');
+  state.selectedDay = parseInt(parts[2]);
+  showView('fill');
+}
+
+function confirmDeleteReport(key) {
+  const main = document.getElementById('main-content');
+  const bar = document.createElement('div');
+  bar.className = 'delete-bar';
+  bar.innerHTML = `<p>Delete this report permanently?</p>
+    <button class="btn-secondary" onclick="this.parentElement.remove()">No</button>
+    <button class="btn-delete" onclick="deleteReport('${key}')">Yes, Delete</button>`;
+  main.prepend(bar);
+}
+
+function deleteReport(key) {
+  delete state.reports[key];
+  saveReports(state.reports);
+  showView('reports');
+}
+
+// ===== OVERVIEW =====
+function renderOverview() {
+  const keys = Object.keys(state.reports);
+  const total = keys.length;
+  const incidents = keys.filter(k => state.reports[k].noIncident === false).length;
+  const totalCars = keys.reduce((s,k) => s + parseInt(state.reports[k].carsDay||0) + parseInt(state.reports[k].carsNight||0), 0);
+  const totalPeople = keys.reduce((s,k) => s + parseInt(state.reports[k].peopleDayNight||0), 0);
+  const daysInCurrentMonth = getDaysInMonth(now.getMonth(), now.getFullYear());
+
+  let html = `
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val">${total}</div><div class="stat-label">Reports Filed</div></div>
+      <div class="stat-card gold"><div class="stat-val">${Math.max(0,daysInCurrentMonth-total)}</div><div class="stat-label">Days Pending</div></div>
+      <div class="stat-card green"><div class="stat-val">${totalCars}</div><div class="stat-label">Total Vehicles</div></div>
+      <div class="stat-card ${incidents>0?'red':'green'}"><div class="stat-val">${incidents}</div><div class="stat-label">Incidents</div></div>
+    </div>
+    <div class="section-divider">Recent Activity</div>`;
+
+  if (!total) {
+    html += `<div class="empty-state"><i class="ti ti-chart-bar-off"></i><p>No data yet. Submit reports to see analytics.</p></div>`;
+  } else {
+    const recent = keys.sort().reverse().slice(0, 15);
+    html += `<div class="report-list">`;
+    recent.forEach(key => {
+      const r = state.reports[key];
+      const parts = key.split('-');
+      const dateDisp = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      html += `<div class="report-list-item" onclick="viewSingleReport('${key}')">
+        <i class="ti ti-file-check" style="color:var(--green-ok);font-size:20px;"></i>
+        <div class="rli-info">
+          <div style="font-family:var(--font-head);font-size:13px;font-weight:600;color:var(--navy);letter-spacing:1px;">${dateDisp}</div>
+          <div class="rli-by">
+            ${r.noIncident!==false?'<span class="tag-clear">Clear</span>':'<span class="tag-incident">Incident</span>'}
+            &nbsp; Vehicles: ${parseInt(r.carsDay||0)+parseInt(r.carsNight||0)} &nbsp; People: ${r.peopleDayNight||0}
+          </div>
+        </div>
+        <i class="ti ti-chevron-right" style="color:var(--ash);"></i>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+  return html;
+}
+
+// ===== PRINT / SHARE =====
+function printReport() { window.print(); }
+
+function sendWhatsApp(key) {
+  const r = state.reports[key];
+  if (!r) return;
+  const parts = key.split('-');
+  const dateDisp = `${parts[2]}/${parts[1]}/${parts[0]}`;
+  const cars = parseInt(r.carsDay||0) + parseInt(r.carsNight||0);
+  const incident = r.noIncident !== false ? 'No incident occurred' : `INCIDENT: ${r.incidentDetails||'See report'}`;
+
+  let msg = `*SECURITY DESK REPORT*\n`;
+  msg += `Date: ${dateDisp}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  if (r.gateOpenedBy) msg += `🚪 Gate opened at ${fmtTimeWA(r.gateOpenedTime)} by ${r.gateOpenedBy}\n`;
+  if (r.dayShiftOfficer) msg += `🌅 Day shift: ${r.dayShiftOfficer} at ${fmtTimeWA(r.dayShiftTime)}\n`;
+  msg += `👥 Staff present: ${r.staffPresent!==false?'Yes':'No'}\n`;
+  msg += `✅ All duties done: ${r.allDutiesDone!==false?'Yes':'No'}\n`;
+  msg += `⚡ Operation: ${r.operationSmooth!==false?'Smooth':'Issues — '+r.operationNote}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `🚗 Vehicles: ${cars} total (Day: ${r.carsDay||0} / Night: ${r.carsNight||0})\n`;
+  msg += `👣 People: ${r.peopleDayNight||0} | Walk-ins: ${r.walkIns||0}\n`;
+  msg += `🚗 Cars on departure: ${r.carsOnDeparture||0}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `${r.noIncident!==false?'✅':'🚨'} ${incident}\n`;
+  if (r.nightShiftOfficer) msg += `🌙 Night shift: ${r.nightShiftOfficer} at ${fmtTimeWA(r.nightShiftTime)}\n`;
+  if (r.additionalNotes) msg += `📝 Notes: ${r.additionalNotes}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  if (r.submittedBy) msg += `Submitted by: ${r.submittedBy}\n`;
+  msg += `Lil Secret Resort — Security Desk`;
+
+  const waNum = (document.getElementById('wa-number')?.value || localStorage.getItem('sdr_wa_number')||'').replace(/\D/g,'');
+  const url = waNum ? `https://wa.me/${waNum}?text=${encodeURIComponent(msg)}` : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+  window.open(url, '_blank');
+}
+
+// ===== PWA INSTALL PROMPT =====
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById('install-banner');
+  if (banner && !localStorage.getItem('pwa_dismissed')) banner.style.display = 'flex';
+});
+
+document.getElementById('install-btn')?.addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('install-banner').style.display = 'none';
+});
+
+document.getElementById('install-dismiss')?.addEventListener('click', () => {
+  document.getElementById('install-banner').style.display = 'none';
+  localStorage.setItem('pwa_dismissed', '1');
+});
+
+// ===== SERVICE WORKER REGISTRATION =====
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('sw.js').catch(() => {});
+  });
+}
+
+// ===== BOOT =====
+render();
+</script>
+</body>
+</html>

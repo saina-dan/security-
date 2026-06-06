@@ -1,0 +1,43 @@
+{
+  "name": "Security Desk Report — Lil Secret Resort",
+  "short_name": "Security Desk",
+  "description": "Daily security duty log system for Lil Secret Resort",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0D1B2A",
+  "theme_color": "#0D1B2A",
+  "lang": "en",
+  "scope": "./",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Fill Today's Report",
+      "short_name": "Fill Report",
+      "description": "Quickly fill today's security report",
+      "url": "./index.html#fill",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "View Reports",
+      "short_name": "Reports",
+      "description": "Browse all submitted reports",
+      "url": "./index.html#reports",
+      "icons": [{ "src": "icons/icon-192.png", "sizes": "192x192" }]
+    }
+  ]
+}
